@@ -1,0 +1,63 @@
+---
+- name: Create any any user
+  ansible.builtin.user:
+    name: any
+    shell: /sbin/nologin
+    password: '*'
+    create_home: no
+    system: yes
+    state: present
+
+- name: Create locks directory
+  ansible.builtin.file:
+    state: directory
+    path: "/locks"
+    owner: "any"
+    group: "any"
+    mode: '0777'
+
+- name: Create locks file
+  ansible.builtin.file:
+    state: touch
+    path: "/locks/lockfile.lock"
+    owner: "any"
+    group: "any"
+    mode: '0777'
+
+- name: Create binary directory
+  ansible.builtin.file:
+    state: directory
+    path: "/usr/local/bin/"
+    owner: "root"
+    group: "root"
+    mode: '0755'
+
+- name: Copy watcher binary
+  ansible.builtin.copy:
+    src: "bin/watcher"
+    dest: "/usr/local/bin/watcher"
+    owner: "root"
+    group: "root"
+    mode: '0750'
+
+- name: Copy watcher systemd units
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/lib/systemd/system/"
+    owner: "root"
+    group: "root"
+    mode: '0644'
+  with_items:
+    - watcher.path
+    - watcher.service
+    - locker.service
+
+- name: Enable watcher units
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  with_items:
+    - watcher.path
+    - locker.service

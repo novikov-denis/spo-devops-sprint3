@@ -1,0 +1,31 @@
+---
+- name: Create binary directory
+  file:
+    state: directory
+    path: "/usr/local/bin/"
+    owner: "root"
+    group: "root"
+    mode: '0755'
+
+- name: Copy echo binary
+  copy:
+    src: "bin/echo"
+    dest: "/usr/local/bin/echo"
+    owner: "root"
+    group: "root"
+    mode: '0750'
+
+- name: Copy echo systemd unit
+  copy:
+    src: "echo.service"
+    dest: "/lib/systemd/system/"
+    owner: "root"
+    group: "root"
+    mode: '0644'
+
+- name: Enable watcher units
+  systemd:
+    name: "echo.service"
+    state: started
+    enabled: yes
+    daemon_reload: yes

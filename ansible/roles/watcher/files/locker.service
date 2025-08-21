@@ -1,0 +1,13 @@
+[Unit]
+Description=Simple File Locker
+StartLimitIntervalSec=10
+StartLimitBurst=5
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/watcher
+Restart=on-failure
+RestartSec=1s
+
+[Install]
+WantedBy=multi-user.target

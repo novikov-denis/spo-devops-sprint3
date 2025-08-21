@@ -1,0 +1,43 @@
+---
+- name: Provision Sprint 3 VM (Vagrant Edition)
+  hosts: default
+  become: true
+  vars:
+    # В Vagrant окружении устройства называются по-другому
+    storage_device: "{{ storage_device | default('/dev/sdc') }}"
+    base_device: "{{ base_device | default('/dev/sda') }}"
+    
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Install required packages
+      apt:
+        name:
+          - lvm2
+          - xfsprogs
+          - parted
+        state: present
+
+    # Временно отключено - дополнительный диск отключен для диагностики
+    # - name: Wait for additional disk to be available
+    #   wait_for:
+    #     path: "{{ storage_device }}"
+    #     timeout: 60
+    #   when: vagrant_environment | default(false)
+
+  roles:
+    # Сначала storage - создает файловую систему на дополнительном диске (временно отключено)
+    # - role: storage-vagrant
+    # Остальные роли в том же порядке
+    - trouble
+    - watcher  
+    - echo
+    - badfs
+    - prepare
+    - nsswitch
+    - sources
+    - ulimit
+    - role: grub-vagrant

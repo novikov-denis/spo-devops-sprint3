@@ -1,0 +1,9 @@
+---
+- name: Set nofile for all users
+  become: yes
+  ansible.builtin.copy:
+    src: limits.conf
+    dest: /etc/security/limits.conf
+    owner: root
+    group: root
+    mode: '0644'

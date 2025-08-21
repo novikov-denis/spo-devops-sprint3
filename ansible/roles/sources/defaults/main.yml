@@ -1,0 +1,3 @@
+---
+sources_files_to_delete:
+  - /etc/apt/sources.list.d

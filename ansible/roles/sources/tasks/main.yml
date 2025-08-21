@@ -1,0 +1,14 @@
+---
+- name: Delete apt sources from the box
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  with_items: "{{ sources_files_to_delete }}"
+
+- name: Add apt sources to the box
+  ansible.builtin.copy:
+      content: "FLAG: DEVOPSCOURSE"
+      dest: /etc/apt/sources.list
+      owner: root
+      group: root
+      mode: '0644'

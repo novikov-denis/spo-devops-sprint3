@@ -1,0 +1,69 @@
+---
+- name: Check if storage device exists
+  stat:
+    path: "{{ storage_device }}"
+  register: storage_device_stat
+
+- name: Fail if storage device doesn't exist
+  fail:
+    msg: "Storage device {{ storage_device }} not found. Make sure VirtualBox created the additional disk."
+  when: not storage_device_stat.stat.exists
+
+- name: Create partition table on storage device
+  community.general.parted:
+    device: "{{ storage_device }}"
+    label: gpt
+    state: present
+
+- name: Create first partition on storage device for LVM
+  community.general.parted:
+    device: "{{ storage_device }}"
+    number: 1
+    state: present
+    label: gpt
+    name: trouble
+    part_start: 1MiB
+    part_end: 100%
+    flags: [ lvm ]
+    align: optimal
+
+- name: Create opt volume group
+  community.general.lvg:
+    vg: opt
+    pvs: "{{ storage_device }}1"
+
+- name: Create devops logical volume
+  community.general.lvol:
+    vg: opt
+    lv: devops
+    size: 100%FREE
+
+- name: Create xfs filesystem on devops logical volume
+  community.general.filesystem:
+    fstype: xfs
+    dev: /dev/opt/devops
+
+- name: Create mount point
+  file:
+    path: /opt/devops
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Mount devops logical volume
+  ansible.posix.mount:
+    path: /opt/devops
+    src: /dev/opt/devops
+    fstype: xfs
+    state: mounted
+    opts: defaults
+
+- name: Create newflag
+  ansible.builtin.copy:
+      content: "FLAG: DOAUTOMATEREPEATE"
+      dest: /opt/devops/flag.txt
+      owner: root
+      group: root
+      mode: '0644'
+

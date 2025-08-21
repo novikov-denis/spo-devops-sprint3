@@ -1,0 +1,27 @@
+---
+prepare_packages_to_delete:
+  - lvm2
+  - snapd
+  - nano
+  - open-vm-tools
+  - open-iscsi
+  - ufw
+  - telnet
+  - wget
+  - tmux
+  - htop
+  - git
+  - multipath-tools
+  - xfsprogs
+  - screen
+  - sosreport
+  - cloud-init
+  - cloud-guest-utils
+  - cloud-initramfs-growroot
+  - cloud-initramfs-copymods
+  - cloud-initramfs-dyn-netconf
+  - update-manager-core
+  - unattended-upgrades
+  - openssh-client
+  - openssh-sftp-server
+  - openssh-server

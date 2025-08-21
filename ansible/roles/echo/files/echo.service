@@ -1,0 +1,17 @@
+# /etc/systemd/system/echo.service
+[Unit]
+Description=Simple Network Server with TCP Listener
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=10
+StartLimitBurst=5
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/echo
+Restart=on-failure
+RestartSec=1s
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target

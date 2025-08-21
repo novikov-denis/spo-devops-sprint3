@@ -1,0 +1,23 @@
+---
+- name: Unmount devops logical volume
+  ansible.posix.mount:
+    path: /opt/devops
+    state: absent
+
+- name: Erase first superblock for devops logical volume
+  ansible.builtin.command:
+    argv:
+      - /usr/bin/dd
+      - if=/dev/zero
+      - of=/dev/opt/devops
+      - bs=512
+      - count=1
+      - conv=fsync
+
+- name: Write usefully info to the first superblock
+  ansible.builtin.command:
+    argv:
+      - /usr/bin/dd
+      - of=/dev/opt/devops
+      - conv=fsync
+    stdin: "XFS FLAG: WHOISEVGFITIL"

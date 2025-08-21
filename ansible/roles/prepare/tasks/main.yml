@@ -1,0 +1,22 @@
+---
+- name: Update packages
+  apt:
+    name: '*'
+    state: latest
+    autoremove: yes
+
+- name: Get current systemd default
+  command: "systemctl get-default"
+  changed_when: false
+  register: _systemd_default
+
+- name: Set default to multi-user target
+  command: "systemctl set-default multi-user.target"
+  when: "'multi-user' not in _systemd_default.stdout"
+
+- name: Remove packages
+  apt:
+    name: "{{ prepare_packages_to_delete }}"
+    state: absent
+    purge: yes
+    autoremove: yes

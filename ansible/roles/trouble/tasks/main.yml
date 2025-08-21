@@ -1,0 +1,16 @@
+---
+- name: Create binary directory
+  file:
+    state: directory
+    path: "/opt/devops/bin/"
+    owner: "root"
+    group: "root"
+    mode: '0755'
+
+- name: Copy trouble binary
+  copy:
+    src: "bin/trouble"
+    dest: "/opt/devops/bin/trouble"
+    owner: "root"
+    group: "root"
+    mode: '0750'

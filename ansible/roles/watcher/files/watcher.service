@@ -1,0 +1,6 @@
+[Unit]
+Description=Simple File Watcher
+
+[Service]
+Type=oneshot
+ExecStart=/bin/systemctl restart locker

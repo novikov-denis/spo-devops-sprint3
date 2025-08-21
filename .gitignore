@@ -1,0 +1,21 @@
+bin/
+ansible_collections
+service_account_key_file.json
+*.pem# Vagrant and VM files
+.vagrant/
+*.vdi
+console.log
+
+# Compiled binaries
+ansible/files/bin/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs
+*.log

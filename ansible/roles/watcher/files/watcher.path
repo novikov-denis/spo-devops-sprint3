@@ -1,0 +1,8 @@
+[Unit]
+Description=Monitor lockfile file for changes
+
+[Path]
+PathChanged=/locks/lockfile.lock
+
+[Install]
+WantedBy=multi-user.target
